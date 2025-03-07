@@ -1,16 +1,15 @@
 //// filepath: ./Components/Navbar.jsx
 
 import React from "react";
+import { NavLink } from "react-router-dom";
 
-function Navbar({ activeTab, setActiveTab }) {
-  // TODO: Enhance navbar responsiveness for smaller screens if needed
+function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <NavLink className="navbar-brand" to="/tasks">
           Task Manager
-        </a>
-        {/* Toggler for collapsing navbar on smaller screens */}
+        </NavLink>
         <button
           className="navbar-toggler"
           type="button"
@@ -23,37 +22,21 @@ function Navbar({ activeTab, setActiveTab }) {
           <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarText">
-          {/* Navbar items with event bindings */}
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <button
-                className={`nav-link btn btn-link ${
-                  activeTab === "all" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("all")}
-              >
+              <NavLink className="nav-link" to="/tasks">
                 All Tasks
-              </button>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <button
-                className={`nav-link btn btn-link ${
-                  activeTab === "calendar" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("calendar")}
-              >
+              <NavLink className="nav-link" to="/calendar">
                 Calendar View
-              </button>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <button
-                className={`nav-link btn btn-link ${
-                  activeTab === "timeline" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("timeline")}
-              >
+              <NavLink className="nav-link" to="/timeline">
                 Timeline View
-              </button>
+              </NavLink>
             </li>
           </ul>
           <span className="navbar-text">Manage your tasks efficiently!</span>
@@ -64,3 +47,4 @@ function Navbar({ activeTab, setActiveTab }) {
 }
 
 export default Navbar;
+

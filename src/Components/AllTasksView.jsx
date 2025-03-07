@@ -2,15 +2,22 @@
 
 import React, { useState } from "react";
 
-function AllTasksView({ addTask, tasks }) {
-  // Local component state to manage form view and input values
+function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
+  // State for adding a new task
   const [isAdding, setIsAdding] = useState(false);
   const [taskName, setTaskName] = useState("");
   const [singleDate, setSingleDate] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // Handle form submission for adding a new task
+  // State for editing a task
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editTaskName, setEditTaskName] = useState("");
+  const [editSingleDate, setEditSingleDate] = useState("");
+  const [editStartDate, setEditStartDate] = useState("");
+  const [editEndDate, setEditEndDate] = useState("");
+
+  // Handle adding a new task
   const handleSubmit = (e) => {
     e.preventDefault();
     const newTask = {
@@ -20,9 +27,7 @@ function AllTasksView({ addTask, tasks }) {
       startDate: startDate || null,
       endDate: endDate || null,
     };
-    // Pass new task to parent component
     addTask(newTask);
-    // Reset form fields and collapse the form
     setTaskName("");
     setSingleDate("");
     setStartDate("");
@@ -30,15 +35,50 @@ function AllTasksView({ addTask, tasks }) {
     setIsAdding(false);
   };
 
+  // Begin editing a task by setting the editing state with its details
+  const handleEditClick = (task) => {
+    setEditingTaskId(task.id);
+    setEditTaskName(task.taskName);
+    setEditSingleDate(task.date || "");
+    setEditStartDate(task.startDate || "");
+    setEditEndDate(task.endDate || "");
+  };
+
+  // Handle submitting an edited task
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    const updatedTask = {
+      id: editingTaskId,
+      taskName: editTaskName,
+      date: editSingleDate || editStartDate,
+      startDate: editStartDate || null,
+      endDate: editEndDate || null,
+    };
+    editTask(updatedTask);
+    setEditingTaskId(null);
+    setEditTaskName("");
+    setEditSingleDate("");
+    setEditStartDate("");
+    setEditEndDate("");
+  };
+
+  // Cancel editing
+  const handleEditCancel = () => {
+    setEditingTaskId(null);
+    setEditTaskName("");
+    setEditSingleDate("");
+    setEditStartDate("");
+    setEditEndDate("");
+  };
+
   return (
     <div>
       {isAdding ? (
-        // Form view for adding new tasks with various input elements
+        // Form view for adding a new task
         <div className="card mb-3">
           <div className="card-body">
             <h5 className="card-title">New Task</h5>
             <form onSubmit={handleSubmit}>
-              {/* Task Name input */}
               <div className="mb-3">
                 <label className="form-label">Task Name</label>
                 <input
@@ -49,7 +89,6 @@ function AllTasksView({ addTask, tasks }) {
                   required
                 />
               </div>
-              {/* Single Date input */}
               <div className="mb-3">
                 <label className="form-label">Task Date</label>
                 <input
@@ -62,7 +101,6 @@ function AllTasksView({ addTask, tasks }) {
                   Leave empty if specifying a date range.
                 </small>
               </div>
-              {/* Date Range inputs */}
               <div className="mb-3">
                 <label className="form-label">Start Date</label>
                 <input
@@ -81,7 +119,6 @@ function AllTasksView({ addTask, tasks }) {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
-              {/* Submit and Cancel buttons with event bindings */}
               <button type="submit" className="btn btn-primary">
                 Add Task
               </button>
@@ -96,7 +133,7 @@ function AllTasksView({ addTask, tasks }) {
           </div>
         </div>
       ) : (
-        // Display view: Either initial "add" card or list of tasks if already added
+        // Display existing tasks
         <div>
           {tasks.length === 0 ? (
             <div
@@ -106,14 +143,11 @@ function AllTasksView({ addTask, tasks }) {
             >
               <div className="card-body d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0">Add a new task</h5>
-                <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-                  ＋
-                </span>
+                <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>＋</span>
               </div>
             </div>
           ) : (
             <>
-              {/* Card to add a new task */}
               <div
                 className="card mb-3"
                 style={{ cursor: "pointer" }}
@@ -121,22 +155,90 @@ function AllTasksView({ addTask, tasks }) {
               >
                 <div className="card-body d-flex align-items-center justify-content-between">
                   <h5 className="card-title mb-0">Add a new task</h5>
-                  <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-                    ＋
-                  </span>
+                  <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>＋</span>
                 </div>
               </div>
-              {/* List of tasks */}
               {tasks.map((task) => (
                 <div className="card mb-2" key={task.id}>
                   <div className="card-body">
-                    <h5 className="card-title">{task.taskName}</h5>
-                    {task.date ? (
-                      <p className="card-text">Date: {task.date}</p>
+                    {editingTaskId === task.id ? (
+                      // Editing form for the selected task
+                      <form onSubmit={handleEditSubmit}>
+                        <div className="mb-3">
+                          <label className="form-label">Task Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={editTaskName}
+                            onChange={(e) => setEditTaskName(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label className="form-label">Task Date</label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            value={editSingleDate}
+                            onChange={(e) => setEditSingleDate(e.target.value)}
+                          />
+                          <small className="form-text text-muted">
+                            Leave empty if specifying a date range.
+                          </small>
+                        </div>
+                        <div className="mb-3">
+                          <label className="form-label">Start Date</label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            value={editStartDate}
+                            onChange={(e) => setEditStartDate(e.target.value)}
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label className="form-label">End Date</label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            value={editEndDate}
+                            onChange={(e) => setEditEndDate(e.target.value)}
+                          />
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary ms-2"
+                          onClick={handleEditCancel}
+                        >
+                          Cancel
+                        </button>
+                      </form>
                     ) : (
-                      <p className="card-text">
-                        From: {task.startDate} To: {task.endDate}
-                      </p>
+                      // Display task information with Edit and Delete buttons
+                      <>
+                        <h5 className="card-title">{task.taskName}</h5>
+                        {task.date ? (
+                          <p className="card-text">Date: {task.date}</p>
+                        ) : (
+                          <p className="card-text">
+                            From: {task.startDate} To: {task.endDate}
+                          </p>
+                        )}
+                        <button
+                          className="btn btn-sm btn-outline-primary me-2"
+                          onClick={() => handleEditClick(task)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => deleteTask(task.id)}
+                        >
+                          Delete
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
