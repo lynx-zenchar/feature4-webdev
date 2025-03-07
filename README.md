@@ -1,4 +1,4 @@
-## Feature 4: Task Manegr Web App
+## Feature 4: Task Manager Web App
 Members: Matthew Eleazar, Allie Bowen
 
 # Important notes (Prerequisites):
