@@ -1,4 +1,4 @@
-import Parse from "../config/parseInit";
+import Parse from "../parseConfig.js";
 
 const Task = Parse.Object.extend("Task");
 
