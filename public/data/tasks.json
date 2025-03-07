@@ -1,34 +1,29 @@
 [
   {
-    "id": 1,
     "taskName": "Complete Web Dev Assignment",
     "date": "2025-02-20",
     "startDate": "2025-02-19",
     "endDate": "2025-02-21"
   },
   {
-    "id": 2,
     "taskName": "Team Meeting",
     "date": "2025-02-21",
     "startDate": "2025-02-21",
     "endDate": "2025-02-21"
   },
   {
-    "id": 3,
     "taskName": "Submit Report",
     "date": "2025-02-22",
     "startDate": "2025-02-20",
     "endDate": "2025-02-22"
   },
   {
-    "id": 4,
     "taskName": "Client Presentation",
     "date": "2025-02-25",
     "startDate": "2025-02-24",
     "endDate": "2025-02-25"
   },
   {
-    "id": 5,
     "taskName": "Project Deadline",
     "date": "2025-03-01",
     "startDate": "2025-02-28",
