@@ -1,25 +1,30 @@
 ## Feature 4: Task Manegr Web App
 Members: Matthew Eleazar, Allie Bowen
 
-# Important notes:
+# Important notes (Prerequisites):
 
 Before or after cloning this repo, make sure you have node v22.14.0 installed (latest as of writing).
 If you need to install node, you can do:
-'''
+```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 source ~/.bashrc
 nvm install 22.14.0
 nvm alias default 22.14.0
 nvm use 22.14.0
 node --version # make sure you have the right version of node
-'''
+```
 
 One that's done, you can go and cd into the directory of this repo
 
-'''
+```
+git clone https://github.com/lynx-zenchar/feature4-webdev.git
+cd feature4-webdev
+```
+
+```
 npm install # this should be enough since Ive updated the packages.json to include all dependencies
 npm run dev
-'''
+```
 
 
 # React + Vite
