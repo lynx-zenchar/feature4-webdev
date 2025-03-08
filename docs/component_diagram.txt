@@ -1,0 +1,20 @@
+public
+|--data
+   |--tasks.json
+|--vite.svg
+
+src
+|--components
+   |-- AllTasksView
+   |-- CalendarView
+   |-- Navbar
+   |-- TimelineView
+|--services
+   |--taskService
+|--assets
+   |--react.svg
+|--models
+   |--TaskModel
+|--App.css
+|--index.css
+|--main.jsx
