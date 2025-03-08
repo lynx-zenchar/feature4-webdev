@@ -1,10 +1,12 @@
 # Feature 4: Task Manager Web App
+
 Members: Matthew Eleazar, Allie Bowen
 
 # Important notes (Prerequisites):
 
 Before or after cloning this repo, make sure you have node v22.14.0 installed (latest as of writing).
 If you need to install node, you can do:
+
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 source ~/.bashrc
@@ -25,7 +27,8 @@ cd feature4-webdev
 npm install # this should be enough since Ive updated the packages.json to include all dependencies
 npm run dev
 ```
-
+## Other Notes:
+- the UML and Component diagrams are found in /docs
 
 # React + Vite
 
