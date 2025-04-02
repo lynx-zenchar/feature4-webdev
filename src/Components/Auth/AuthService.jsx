@@ -1,4 +1,4 @@
-// Auth/AuthService.js
+// Auth/AuthService.jsx
 import Parse from "parse";
 
 // used in auth register component
@@ -45,3 +45,13 @@ export const checkUser = () => {
   return Parse.User.current()?.authenticated;
 };
 
+// Log out the current user
+export const logoutUser = () => {
+  return Parse.User.logOut()
+    .then(() => {
+      alert("You have been logged out.");
+    })
+    .catch((error) => {
+      alert(`Error logging out: ${error.message}`);
+    });
+};
