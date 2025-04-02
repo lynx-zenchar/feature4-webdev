@@ -6,18 +6,15 @@ import { useNavigate } from "react-router-dom";
 
 const AuthRegister = () => {
   const navigate = useNavigate();
-
   const [newUser, setNewUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: ""
   });
-
-  // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
-  // redirect already authenticated users back to home
+  // Redirect if the user is already logged in
   useEffect(() => {
     if (checkUser()) {
       alert("You are already logged in");
@@ -25,9 +22,8 @@ const AuthRegister = () => {
     }
   }, [navigate]);
 
-  // useEffect that run when changes are made to the state variable flags
+  // Process registration when the 'add' flag is triggered
   useEffect(() => {
-    // checkUser() ? history.push("/home"): null;
     if (newUser && add) {
       createUser(newUser).then((userCreated) => {
         if (userCreated) {
@@ -36,7 +32,7 @@ const AuthRegister = () => {
           );
           navigate("/");
         }
-        // TODO: redirect user to main app
+        // Reset flag after registration
         setAdd(false);
       });
     }
@@ -44,10 +40,7 @@ const AuthRegister = () => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    console.log(e.target);
     const { name, value: newValue } = e.target;
-    console.log(newValue);
-
     setNewUser({
       ...newUser,
       [name]: newValue
@@ -56,20 +49,29 @@ const AuthRegister = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log("submitted: ", e.target);
     setAdd(true);
   };
 
   return (
-    <div>
-      <AuthForm
-        user={newUser}
-        onChange={onChangeHandler}
-        onSubmit={onSubmitHandler}
-      />
+    <div className="container my-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow">
+            <div className="card-header text-center bg-success text-white">
+              <h3>Register</h3>
+            </div>
+            <div className="card-body">
+              <AuthForm
+                user={newUser}
+                onChange={onChangeHandler}
+                onSubmit={onSubmitHandler}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default AuthRegister;
-

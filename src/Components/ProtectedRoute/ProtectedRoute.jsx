@@ -1,24 +1,20 @@
 // ProtectedRoute/ProtectedRoute.js
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { checkUser } from "../Auth/AuthService";
 
-// You can pass props using the spread operator to throw them on an object if there are too many to break out
-const ProtectedRoute = ({ element: Component, ...rest }) => {
-  console.log("element: ", Component);
-  const navigate = useNavigate();
-  const goBackHandler = () => {
-    navigate("/auth");
-  };
-  if (checkUser()) {
+const ProtectedRoute = ({ element: Component }) => {
+  // Log the current authentication status for debugging
+  const isAuthenticated = checkUser();
+  console.log("ProtectedRoute: isAuthenticated =", isAuthenticated);
+
+  if (isAuthenticated) {
     return <Component />;
   } else {
-    return (
-      <div>
-        <p>Unauthorized!</p> <button onClick={goBackHandler}>Go Back.</button>
-      </div>
-    );
+    console.log("User not authenticated. Redirecting to /auth");
+    return <Navigate to="/auth" replace />;
   }
 };
 
 export default ProtectedRoute;
+

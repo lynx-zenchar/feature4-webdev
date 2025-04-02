@@ -6,16 +6,13 @@ import { useNavigate } from "react-router-dom";
 
 const AuthLogin = () => {
   const navigate = useNavigate();
-
-  // redirect already authenticated users back to home
   const [currentUser, setCurrentUser] = useState({
     email: "",
     password: ""
   });
-
-  // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
+  // Redirect already authenticated users back to home
   useEffect(() => {
     if (checkUser()) {
       alert("You are already logged in");
@@ -23,7 +20,7 @@ const AuthLogin = () => {
     }
   }, [navigate]);
 
-  // useEffect that run when changes are made to the state variable flags
+  // Process login when the 'add' flag is triggered
   useEffect(() => {
     if (currentUser && add) {
       loginUser(currentUser).then((userLoggedIn) => {
@@ -33,7 +30,7 @@ const AuthLogin = () => {
           );
           navigate("/");
         }
-        // TODO: redirect user to main app
+        // Reset flag after login
         setAdd(false);
       });
     }
@@ -41,10 +38,7 @@ const AuthLogin = () => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    console.log(e.target);
     const { name, value: newValue } = e.target;
-    console.log(newValue);
-
     setCurrentUser({
       ...currentUser,
       [name]: newValue
@@ -53,21 +47,30 @@ const AuthLogin = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log("submitted: ", e.target);
     setAdd(true);
   };
 
   return (
-    <div>
-      <AuthForm
-        user={currentUser}
-        isLogin={true}
-        onChange={onChangeHandler}
-        onSubmit={onSubmitHandler}
-      />
+    <div className="container my-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow">
+            <div className="card-header text-center bg-primary text-white">
+              <h3>Login</h3>
+            </div>
+            <div className="card-body">
+              <AuthForm
+                user={currentUser}
+                isLogin={true}
+                onChange={onChangeHandler}
+                onSubmit={onSubmitHandler}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default AuthLogin;
-

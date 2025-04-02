@@ -1,7 +1,6 @@
 // Auth/Auth.js
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { checkUser } from "./AuthService";
 
 // AuthModule is the landing page for authentication,
@@ -9,30 +8,40 @@ import { checkUser } from "./AuthService";
 const AuthModule = () => {
   const navigate = useNavigate();
 
-  // redirect already authenticated users back to home
+  // Redirect already authenticated users back to home
   useEffect(() => {
     if (checkUser()) {
       alert("You are already logged in");
       navigate("/");
     }
   }, [navigate]);
-  
+
   return (
-    <div>
-      {/* Link to Registration */}
-      <Link to="/auth/register">
-        <button>Register</button>
-      </Link>
-      <br />
-      <br />
-      {/* Link to Login */}
-      <Link to="/auth/login">
-        <button>Login</button>
-      </Link>
-      {/* Future work: Add more styling and animations */}
+    <div className="container my-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow">
+            <div className="card-header text-center bg-primary text-white">
+              <h3>Welcome to Task Manager</h3>
+            </div>
+            <div className="card-body">
+              <p className="text-center">Please choose an option below:</p>
+              <div className="d-grid gap-3">
+                {/* Link to Registration */}
+                <Link to="/auth/register" className="btn btn-success btn-lg">
+                  Register
+                </Link>
+                {/* Link to Login */}
+                <Link to="/auth/login" className="btn btn-outline-primary btn-lg">
+                  Login
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default AuthModule;
-
