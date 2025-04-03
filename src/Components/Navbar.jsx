@@ -1,9 +1,18 @@
 //// filepath: ./Components/Navbar.jsx
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { checkUser, logoutUser } from "./Auth/AuthService";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const isAuthenticated = checkUser();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate("/auth"); // Redirect to auth page after logout
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -39,7 +48,20 @@ function Navbar() {
               </NavLink>
             </li>
           </ul>
-          <span className="navbar-text">Manage your tasks efficiently!</span>
+          <span className="navbar-text">
+            Manage your tasks efficiently!
+          </span>
+          <div className="ms-3">
+            {isAuthenticated ? (
+              <button onClick={handleLogout} className="btn btn-outline-danger">
+                Logout
+              </button>
+            ) : (
+              <NavLink to="/auth" className="btn btn-outline-primary">
+                Login / Register
+              </NavLink>
+            )}
+          </div>
         </div>
       </div>
     </nav>
@@ -47,4 +69,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
