@@ -1,40 +1,30 @@
 // parseConfig.js
 import Parse from "parse";
+import { LiveQueryClient } from "parse";
 
-// Initialize Parse with Back4App credentials
-Parse.initialize("s9lCqixuSrqpLUe8P7LWITgpqWE3gSo6ox6I40WS", "B5yn86As94GTRRpmNcIpGSUi0bylQ2iIZp9fMIas");
+// 1. Initialize Parse
+const APP_ID   = "s9lCqixuSrqpLUe8P7LWITgpqWE3gSo6ox6I40WS";
+const JS_KEY   = "B5yn86As94GTRRpmNcIpGSUi0bylQ2iIZp9fMIas";
+const REST_KEY = "zeNpkegly1Jnwh5ZRzm6wpUupLokXPdURDiR1l93";
+
+Parse.initialize(APP_ID, JS_KEY);
 Parse.serverURL = "https://parseapi.back4app.com";
 
+// 2. Set up LiveQuery client
+//    Replace YOUR_SUBDOMAIN with the one you configured in Back4App (often the same as APP_ID)
+const LIVE_QUERY_URL = "wss://YOUR_SUBDOMAIN.b4a.io";  
+const liveQueryClient = new LiveQueryClient({
+  applicationId: APP_ID,
+  javascriptKey: JS_KEY,
+  serverURL: LIVE_QUERY_URL,
+  // (optionally) restKey: REST_KEY, // not needed for client-side
+});
+
+// 3. Open the connection
+liveQueryClient.open();
+
+// 4. Attach to Parse so you can do:
+//      const sub = Parse.liveQueryClient.subscribe(query);
+Parse.liveQueryClient = liveQueryClient;
+
 export default Parse;
-
-/* 
-If you run into any issues with these keys, tinker around with these keys:
-The second argument for the Parse.initialize function is supposed to be the javascript key
-
-Application ID
-Main ID that uniquely specifies this app.
-Used with one of the keys below.
-s9lCqixuSrqpLUe8P7LWITgpqWE3gSo6ox6I40WS
-
-Client key
-Use this in consumer clients, such as
-the iOS or Android SDKs.
-A0ojg6MFNm5ZtRIviLBpxuqIhXCPSbVLNaxOIh9G
-
-JavaScript key
-Use this when making requests from JavaScript clients.
-B5yn86As94GTRRpmNcIpGSUi0bylQ2iIZp9fMIas
-
-.NET key
-Use this when making requests from
-Windows, Xamarin, or Unity clients.
-USDOSi2x0vsvXxLvYbSGY3pRWYk2YwtEYJmkSfJ4
-
-REST API key
-Use this when making requests from server-side REST applications. Keep it secret!
-REST key
-zeNpkegly1Jnwh5ZRzm6wpUupLokXPdURDiR1l93
-
-
-
-*/

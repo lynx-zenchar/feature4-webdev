@@ -1,5 +1,6 @@
 // App.jsx
 import React, { useEffect, useState } from "react";
+import Parse from "./parseConfig"; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import AllTasksView from "./Components/AllTasksView";
@@ -31,10 +32,68 @@ function App() {
       }
     };
     fetchTasks();
+
+    // Feature 6: LiveQuery Subscription
+      const query = new Parse.Query("Task");
+      const sub = Parse.liveQueryClient.subscribe(query);
+      
+      sub.on("create", (newObj) => {
+        const t = {
+          id: newObj.id,
+          taskName: newObj.get("taskName"),
+          date: newObj.get("date"),
+          startDate: newObj.get("startDate"),
+          endDate: newObj.get("endDate"),
+          priority: newObj.get("priority")
+        };
+        setTasks(prev => [...prev, t]);
+      });
+      sub.on("update", (upd) => {
+        setTasks(prev =>
+          prev.map(t =>
+            t.id === upd.id
+              ? {
+                  id: upd.id,
+                  taskName: upd.get("taskName"),
+                  date: upd.get("date"),
+                  startDate: upd.get("startDate"),
+                  endDate: upd.get("endDate"),
+                  priority: upd.get("priority")
+                }
+              : t
+          )
+        );
+      });
+      sub.on("delete", (del) => {
+        setTasks(prev => prev.filter(t => t.id !== del.id));
+      });
+
+      return () => sub.unsubscribe();
   }, []);
 
   if (loading) return <div>Loading tasks...</div>;
   if (error) return <div>Error loading tasks: {error}</div>;
+
+  // Feature 6: CRUD Handlers
+  const addTask = async (task) => {
+    const saved = await taskService.createTask(task);
+    setTasks(prev => [...prev, {
+      id: saved.id,
+      ...task
+      }]);
+  };
+
+  const editTask = async (task) => {
+    await taskService.updateTask(task.id, task);
+    setTasks(prev =>
+      prev.map(t => (t.id === task.id ? { ...t, ...task } : t))
+    );
+  };
+
+  const deleteTask = async (id) => {
+    await taskService.deleteTask(id);
+    setTasks(prev => prev.filter(t => t.id !== id));
+  };
 
   return (
     <Router>
@@ -47,8 +106,18 @@ function App() {
         {/* Protected Routes: Only accessible if authenticated */}
         <Route
           path="/tasks"
-          element={
-            <ProtectedRoute element={() => <AllTasksView tasks={tasks} addTask={() => {}} />} />
+          element={// Feature 6: Fix Not adding/deleting/editing tasks
+            <ProtectedRoute
+              element={() =>
+                <AllTasksView
+                  tasks={tasks}
+                  addTask={addTask}
+                  editTask={editTask}
+                  deleteTask={deleteTask}
+                />
+              }
+            />
+
           }
         />
         <Route

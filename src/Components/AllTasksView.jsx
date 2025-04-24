@@ -17,6 +17,27 @@ function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
   const [editStartDate, setEditStartDate] = useState("");
   const [editEndDate, setEditEndDate] = useState("");
 
+  // Feature 6 Addition: Task Priority
+  const [priority, setPriority] = useState("Medium");
+  const [editPriority, setEditPriority] = useState("Medium");
+
+  // Feature 6: Sorting by Priority Logic
+  // at top of render()
+  const priorityOrder = { High: 1, Medium: 2, Low: 3, Discard: 4 };
+  const sortedTasks = [...tasks].sort(
+    (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
+  );
+
+  // Feature 6: Badge lookup helper
+    const getBadge = (p) => ({
+    High: "danger",
+    Medium: "warning",
+    Low: "success",
+    Discard: "secondary"
+  }[p] || "secondary");
+
+
+
   // Handle adding a new task
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,6 +47,7 @@ function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
       date: singleDate || startDate,
       startDate: startDate || null,
       endDate: endDate || null,
+      priority,    // ← Feature 6 Priority
     };
     addTask(newTask);
     setTaskName("");
@@ -53,6 +75,7 @@ function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
       date: editSingleDate || editStartDate,
       startDate: editStartDate || null,
       endDate: editEndDate || null,
+      priority: editPriority,
     };
     editTask(updatedTask);
     setEditingTaskId(null);
@@ -119,6 +142,21 @@ function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
+                      <div className="mb-3">
+              
+              <label className="form-label">Priority</label>
+              <select
+                className="form-select"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+              >
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+                <option>Discard</option>
+              </select>
+            </div>
+
               <button type="submit" className="btn btn-primary">
                 Add Task
               </button>
@@ -204,6 +242,21 @@ function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
                             onChange={(e) => setEditEndDate(e.target.value)}
                           />
                         </div>
+
+                            <div className="mb-3">
+                              <label className="form-label">Priority</label>
+                              <select
+                                className="form-select"
+                                value={editPriority}
+                                onChange={(e) => setEditPriority(e.target.value)}
+                              >
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                                <option>Discard</option>
+                              </select>
+                            </div>
+
                         <button type="submit" className="btn btn-primary">
                           Save
                         </button>
@@ -218,7 +271,16 @@ function AllTasksView({ addTask, tasks, editTask, deleteTask }) {
                     ) : (
                       // Display task information with Edit and Delete buttons
                       <>
-                        <h5 className="card-title">{task.taskName}</h5>
+                      
+                        <h5 className="card-title">
+                          {task.taskName}{" "}
+                          <span className={`badge bg-${getBadge(task.priority)}`}>
+                            {task.priority}
+                          </span>
+                        </h5>
+
+
+
                         {task.date ? (
                           <p className="card-text">Date: {task.date}</p>
                         ) : (
