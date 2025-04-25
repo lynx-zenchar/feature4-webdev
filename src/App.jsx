@@ -35,6 +35,8 @@ function App() {
 
     // Feature 6: LiveQuery Subscription
       const query = new Parse.Query("Task");
+      query.equalTo("owner", Parse.User.current());
+      
       const sub = Parse.liveQueryClient.subscribe(query);
       
       sub.on("create", (newObj) => {
