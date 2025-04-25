@@ -20,7 +20,12 @@ function App() {
   const [error, setError] = useState(null);
 
   // Load asynchronous data when the component mounts
+
   useEffect(() => {
+    // Feature 6: LiveQuery Subscription (ON HOLD FOR NOW BC. LIVEQUERY VERIF.)
+    /*
+
+
     const fetchTasks = async () => {
       try {
         const data = await taskService.getTasks();
@@ -33,7 +38,7 @@ function App() {
     };
     fetchTasks();
 
-    // Feature 6: LiveQuery Subscription
+
       const query = new Parse.Query("Task");
       query.equalTo("owner", Parse.User.current());
       
@@ -71,6 +76,31 @@ function App() {
       });
 
       return () => sub.unsubscribe();
+     */
+
+      const fetchTasks = async () => {
+        try {
+          const data = await taskService.getTasks();
+          setTasks(data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      // initial load & periodic refresh
+      fetchTasks();
+      const intervalId = setInterval(fetchTasks, 5000);
+      return () => clearInterval(intervalId);
+ 
+
+
+
+
+
+
+
   }, []);
 
   if (loading) return <div>Loading tasks...</div>;

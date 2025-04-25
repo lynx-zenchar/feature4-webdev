@@ -3,10 +3,22 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { checkUser, logoutUser } from "./Auth/AuthService";
+import Parse from "../parseConfig";  // ← adjust path if needed
 
 function Navbar() {
   const navigate = useNavigate();
   const isAuthenticated = checkUser();
+
+  // Only fetch the Parse user once (sync call)
+  const currentUser = isAuthenticated ? Parse.User.current() : null;
+  const firstName = currentUser?.get("firstName") || "";
+  const lastName  = currentUser?.get("lastName")  || "";
+
+
+
+
+
+
 
   const handleLogout = async () => {
     await logoutUser();
@@ -48,9 +60,20 @@ function Navbar() {
               </NavLink>
             </li>
           </ul>
-          <span className="navbar-text">
-            Manage your tasks efficiently!
-          </span>
+
+  
+          {isAuthenticated && (// Displays name after login
+            <span className="navbar-text me-3">
+              Welcome, {firstName} {lastName}!
+            </span>
+          )}
+          {!isAuthenticated && (
+            <span className="navbar-text">
+              Manage your tasks efficiently!
+            </span>
+          )}
+
+
           <div className="ms-3">
             {isAuthenticated ? (
               <button onClick={handleLogout} className="btn btn-outline-danger">
