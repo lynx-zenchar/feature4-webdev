@@ -91,7 +91,7 @@ function App() {
 
       // initial load & periodic refresh
       fetchTasks();
-      const intervalId = setInterval(fetchTasks, 5000);
+      const intervalId = setInterval(fetchTasks, 1000); // 1 second for speed
       return () => clearInterval(intervalId);
  
 
@@ -140,7 +140,7 @@ function App() {
           path="/tasks"
           element={// Feature 6: Fix Not adding/deleting/editing tasks
             <ProtectedRoute
-              element={() =>
+              element={
                 <AllTasksView
                   tasks={tasks}
                   addTask={addTask}
@@ -155,13 +155,13 @@ function App() {
         <Route
           path="/calendar"
           element={
-            <ProtectedRoute element={() => <CalendarView tasks={tasks} />} />
+            <ProtectedRoute element={<CalendarView tasks={tasks} />} />
           }
         />
         <Route
           path="/timeline"
           element={
-            <ProtectedRoute element={() => <TimelineView tasks={tasks} />} />
+            <ProtectedRoute element={<TimelineView tasks={tasks} />} />
           }
         />
 
