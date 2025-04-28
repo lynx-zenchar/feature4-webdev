@@ -1,4 +1,4 @@
-// ProtectedRoute/ProtectedRoute.js
+// ProtectedRoute/ProtectedRoute.jsx
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { checkUser } from "../Auth/AuthService";

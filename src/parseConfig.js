@@ -10,6 +10,10 @@ const REST_KEY = "zeNpkegly1Jnwh5ZRzm6wpUupLokXPdURDiR1l93";
 Parse.initialize(APP_ID, JS_KEY);
 Parse.serverURL = "https://parseapi.back4app.com";
 
+
+/*
+DISABLE LIVEQUERY FOR NOW UNTIL ACCOUNT GETS VERIFIED
+
 // 2. Set up LiveQuery client
 //    Replace YOUR_SUBDOMAIN with the one you configured in Back4App (often the same as APP_ID)
 const LIVE_QUERY_URL = "wss://YOUR_SUBDOMAIN.b4a.io";  
@@ -27,4 +31,8 @@ liveQueryClient.open();
 //      const sub = Parse.liveQueryClient.subscribe(query);
 Parse.liveQueryClient = liveQueryClient;
 
-export default Parse;
+
+ */
+
+
+export default Parse; // KEEP OUTSIDE
