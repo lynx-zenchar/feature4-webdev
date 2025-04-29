@@ -1,4 +1,4 @@
-//// filepath: ./Services/taskService.js
+// Services/taskService.js
 import TaskModel from "../models/TaskModel";
 
 const taskService = {
@@ -6,7 +6,7 @@ const taskService = {
   createTask: TaskModel.create,
   updateTask: TaskModel.update,
   deleteTask: TaskModel.delete,
+  shareTask: TaskModel.share,
 };
 
 export default taskService;
-

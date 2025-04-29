@@ -1,7 +1,7 @@
 // src/Components/AllTasksView.jsx
 import React, { useState } from "react";
 
-function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
+function AllTasksView({ addTask, editTask, deleteTask, shareTask, tasks }) {
   // — form state for new task
   const [isAdding, setIsAdding] = useState(false);
   const [taskName, setTaskName] = useState("");
@@ -10,6 +10,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
   const [endDate, setEndDate] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [tagInput, setTagInput] = useState("");
+  const [shareInput, setShareInput] = useState("");
 
   // — form state for editing
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -19,6 +20,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
   const [editEndDate, setEditEndDate] = useState("");
   const [editPriority, setEditPriority] = useState("Medium");
   const [editTagsInput, setEditTagsInput] = useState("");
+  const [editShareInput, setEditShareInput] = useState("");
 
   // — tag filter
   const [filterTag, setFilterTag] = useState("");
@@ -39,12 +41,22 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
 
   // — badge-color helper
   const getBadge = (p) =>
-    ({ High: "danger", Medium: "warning", Low: "success", Discard: "secondary" }[p] ||
-      "secondary");
+    ({
+      High: "danger",
+      Medium: "warning",
+      Low: "success",
+      Discard: "secondary",
+    }[p] || "secondary");
 
   // — add-task submit
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const shareWithEmails = shareInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s);
+
     addTask({
       taskName,
       date: singleDate || startDate,
@@ -55,7 +67,9 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
         .split(",")
         .map((t) => t.trim())
         .filter((t) => t),
+      shareWithEmails,
     });
+
     // reset form
     setTaskName("");
     setSingleDate("");
@@ -63,6 +77,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
     setEndDate("");
     setPriority("Medium");
     setTagInput("");
+    setShareInput("");
     setIsAdding(false);
   };
 
@@ -75,11 +90,18 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
     setEditEndDate(t.endDate || "");
     setEditPriority(t.priority);
     setEditTagsInput((t.tags || []).join(", "));
+    setEditShareInput((t.sharedWith || []).join(", "));
   };
 
   // — submit edits
   const handleEditSubmit = (e) => {
     e.preventDefault();
+
+    const shareWithEmails = editShareInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s);
+
     editTask({
       id: editingTaskId,
       taskName: editTaskName,
@@ -91,13 +113,17 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
         .split(",")
         .map((t) => t.trim())
         .filter((t) => t),
+      shareWithEmails,
     });
+
     setEditingTaskId(null);
+    setEditShareInput("");
   };
 
   // — cancel edit
   const handleEditCancel = () => {
     setEditingTaskId(null);
+    setEditShareInput("");
   };
 
   return (
@@ -107,7 +133,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
           <div className="card-body">
             <h5 className="card-title">New Task</h5>
             <form onSubmit={handleSubmit}>
-              {/* name, date, start/end identical to before */}
+              {/* Task Name */}
               <div className="mb-3">
                 <label className="form-label">Task Name</label>
                 <input
@@ -118,15 +144,15 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                   required
                 />
               </div>
-              {/* singleDate, startDate, endDate… */}
-              {/* READDED: single‐date vs. date‐range */}
+
+              {/* Dates */}
               <div className="mb-3">
                 <label className="form-label">Task Date</label>
                 <input
                   type="date"
                   className="form-control"
                   value={singleDate}
-                  onChange={e => setSingleDate(e.target.value)}
+                  onChange={(e) => setSingleDate(e.target.value)}
                 />
                 <small className="form-text text-muted">
                   Leave empty if specifying a date range.
@@ -138,7 +164,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                   type="date"
                   className="form-control"
                   value={startDate}
-                  onChange={e => setStartDate(e.target.value)}
+                  onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -147,10 +173,11 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                   type="date"
                   className="form-control"
                   value={endDate}
-                  onChange={e => setEndDate(e.target.value)}
+                  onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
 
+              {/* Priority */}
               <div className="mb-3">
                 <label className="form-label">Priority</label>
                 <select
@@ -164,6 +191,8 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                   <option>Discard</option>
                 </select>
               </div>
+
+              {/* Tags */}
               <div className="mb-3">
                 <label className="form-label">Tags (comma-separated)</label>
                 <input
@@ -174,6 +203,22 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                   placeholder="e.g. School, Urgent"
                 />
               </div>
+
+              {/* Share With */}
+              <div className="mb-3">
+                <label className="form-label">
+                  Share with (comma-separated emails)
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={shareInput}
+                  onChange={(e) => setShareInput(e.target.value)}
+                  placeholder="alice@example.com, bob@example.com"
+                />
+              </div>
+
+              {/* Actions */}
               <button type="submit" className="btn btn-primary">
                 Add Task
               </button>
@@ -189,7 +234,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
         </div>
       ) : (
         <>
-          {/* “Add new task” card */}
+          {/* Add New Task Card */}
           <div
             className="card mb-3 bg-success text-white"
             style={{ cursor: "pointer" }}
@@ -203,7 +248,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
             </div>
           </div>
 
-          {/* Tag filter */}
+          {/* Tag Filter */}
           <div className="mb-3">
             <label className="form-label">Filter by Tag</label>
             <select
@@ -220,13 +265,13 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
             </select>
           </div>
 
-          {/* Render tasks */}
+          {/* Task Cards */}
           {filteredTasks.map((task) => (
             <div className="card mb-2" key={task.id}>
               <div className="card-body">
                 {editingTaskId === task.id ? (
                   <form onSubmit={handleEditSubmit}>
-                    {/* same fields as add, but bound to edit… */}
+                    {/* Task Name */}
                     <div className="mb-3">
                       <label className="form-label">Task Name</label>
                       <input
@@ -237,15 +282,15 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                         required
                       />
                     </div>
-                    {/* …date fields omitted for brevity… */}
-                    {/* READDED: single‐date vs. date‐range (editing) */}
+
+                    {/* Dates */}
                     <div className="mb-3">
                       <label className="form-label">Task Date</label>
                       <input
                         type="date"
                         className="form-control"
                         value={editSingleDate}
-                        onChange={e => setEditSingleDate(e.target.value)}
+                        onChange={(e) => setEditSingleDate(e.target.value)}
                       />
                       <small className="form-text text-muted">
                         Leave empty if specifying a date range.
@@ -257,7 +302,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                         type="date"
                         className="form-control"
                         value={editStartDate}
-                        onChange={e => setEditStartDate(e.target.value)}
+                        onChange={(e) => setEditStartDate(e.target.value)}
                       />
                     </div>
                     <div className="mb-3">
@@ -266,10 +311,11 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                         type="date"
                         className="form-control"
                         value={editEndDate}
-                        onChange={e => setEditEndDate(e.target.value)}
+                        onChange={(e) => setEditEndDate(e.target.value)}
                       />
                     </div>
 
+                    {/* Priority */}
                     <div className="mb-3">
                       <label className="form-label">Priority</label>
                       <select
@@ -283,6 +329,8 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                         <option>Discard</option>
                       </select>
                     </div>
+
+                    {/* Tags */}
                     <div className="mb-3">
                       <label className="form-label">Tags</label>
                       <input
@@ -293,6 +341,22 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                         placeholder="e.g. School, Urgent"
                       />
                     </div>
+
+                    {/* Share With */}
+                    <div className="mb-3">
+                      <label className="form-label">
+                        Share with (comma-separated emails)
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editShareInput}
+                        onChange={(e) => setEditShareInput(e.target.value)}
+                        placeholder="alice@example.com, bob@example.com"
+                      />
+                    </div>
+
+                    {/* Actions */}
                     <button type="submit" className="btn btn-primary">
                       Save
                     </button>
@@ -306,14 +370,14 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                   </form>
                 ) : (
                   <>
-                    <h5 className="card-title">
+                    <h5 className="card-title"> 
                       {task.taskName}{" "}
                       <span className={`badge bg-${getBadge(task.priority)}`}>
                         {task.priority}
                       </span>
                     </h5>
 
-                    {/* ← Date or range display */}
+                    {/* Date or Range */}
                     {task.date ? (
                       <p className="card-text">Date: {task.date}</p>
                     ) : (
@@ -322,21 +386,26 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                       </p>
                     )}
 
-
-                    {/* date / range display as before… */}
-                    {/* tags display */}
+                    {/* Tags */}
                     {task.tags?.length > 0 && (
                       <div className="mb-2">
                         {task.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="badge bg-info me-1"
-                          >
+                          <span key={tag} className="badge bg-info me-1">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
+
+                    {/* Shared With */}
+                    {task.sharedWith?.length > 0 && (
+                      <p className="mb-2">
+                        <strong>Shared with:</strong>{" "}
+                        {task.sharedWith.join(", ")}
+                      </p>
+                    )}
+
+                    {/* Actions */}
                     <button
                       className="btn btn-sm btn-outline-primary me-2"
                       onClick={() => handleEditClick(task)}
@@ -344,7 +413,7 @@ function AllTasksView({ addTask, editTask, deleteTask, tasks }) {
                       Edit
                     </button>
                     <button
-                      className="btn btn-sm btn-outline-danger"
+                      className="btn btn-sm btn-outline-danger me-2"
                       onClick={() => deleteTask(task.id)}
                     >
                       Delete
