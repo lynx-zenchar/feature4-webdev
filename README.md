@@ -1,4 +1,4 @@
-# Feature 5: Task Manager Web App
+# Feature 6: Task Manager Web App
 
 Members: Matthew Eleazar, Allie Bowen
 
@@ -27,8 +27,15 @@ cd feature4-webdev
 npm install # this should be enough since Ive updated the packages.json to include all dependencies
 npm run dev
 ```
+
 ## Other Notes:
+
 - the UML and Component diagrams are found in /docs
+
+## Feature 6 specific:
+
+- We have a couple of existing accounts if you would like to test on them:
+  - User: library@user.com |  Pass:libraryuser
 
 # React + Vite
 
@@ -38,6 +45,7 @@ Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
 
 ## Expanding the ESLint configuration
 
