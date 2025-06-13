@@ -69,7 +69,7 @@ function Navbar() {
           )}
           {!isAuthenticated && (
             <span className="navbar-text">
-              Manage your tasks efficiently!
+              Manage your projects efficiently!
             </span>
           )}
 

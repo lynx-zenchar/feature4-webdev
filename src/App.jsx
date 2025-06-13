@@ -23,7 +23,10 @@ function App() {
 
   useEffect(() => {
     const user = Parse.User.current();
-    if (!user) return;
+    if (!user) {
+      setLoading(false); // Added june 12, 2025
+      return;
+    }
 
     const fetchTasks = async () => {
       try {
