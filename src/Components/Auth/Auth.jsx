@@ -22,7 +22,7 @@ const AuthModule = () => {
         <div className="col-md-6">
           <div className="card shadow">
             <div className="card-header text-center bg-primary text-white">
-              <h3>Welcome to Task Manager</h3>
+              <h3>Welcome to Project_Manager++</h3>
             </div>
             <div className="card-body">
               <p className="text-center">Please choose an option below:</p>
